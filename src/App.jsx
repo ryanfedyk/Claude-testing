@@ -7,6 +7,8 @@ import Dashboard from './components/Dashboard';
 import { BalanceChart, IncomeExpenseChart, MonteCarloChart, WithdrawalRateChart } from './components/Charts';
 import InsightsPanel from './components/InsightsPanel';
 import YearlyTable from './components/YearlyTable';
+import ApiKeySettings from './components/ApiKeySettings';
+import { getStoredApiKey } from './utils/llmParser';
 import { Upload, ClipboardList, BarChart3, ChevronRight, RotateCcw } from 'lucide-react';
 
 const SCENARIO_COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444'];
@@ -49,6 +51,7 @@ function App() {
   const [missingRequired, setMissingRequired] = useState([]);
   const [monteCarloData, setMonteCarloData] = useState(null);
   const [isRunningMC, setIsRunningMC] = useState(false);
+  const [apiKey, setApiKey] = useState(() => getStoredApiKey());
   const resultsRef = useRef(null);
 
   // Handle file upload data
@@ -254,6 +257,9 @@ function App() {
               })}
             </div>
 
+            <div className="flex items-center gap-2">
+              <ApiKeySettings apiKey={apiKey} onApiKeyChange={setApiKey} />
+
             {step === 'results' && (
               <button
                 onClick={() => {
@@ -269,6 +275,7 @@ function App() {
                 Start Over
               </button>
             )}
+            </div>
           </div>
         </div>
       </header>
@@ -285,7 +292,7 @@ function App() {
               </p>
             </div>
 
-            <FileUpload onDataParsed={handleDataParsed} />
+            <FileUpload onDataParsed={handleDataParsed} apiKey={apiKey} />
 
             <div className="flex items-center gap-4">
               <div className="flex-1 h-px bg-slate-700" />
